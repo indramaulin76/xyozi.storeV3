@@ -5,27 +5,27 @@ services:
   app:
     build:
       context: .
-      dockerfile: docker/php/Dockerfile
-    container_name: topup_games_app
+      dockerfile: ./Dockerfile
+    container_name: xyozi_store_app
     ports:
-      - "8080:80"
+      - "80:80"
     volumes:
       - .:/var/www/html
-      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini:ro
     environment:
-      - CI_ENVIRONMENT=development
+      - CI_ENVIRONMENT=production
       - DB_CONNECTION=mysqli
       - DB_HOST=db
       - DB_PORT=3306
       - DB_DATABASE=topup_games
       - DB_USERNAME=docker
       - DB_PASSWORD=docker_password
-      - app.baseURL=http://localhost:8080
+      - app.baseURL=https://xyozistore.my.id
     depends_on:
       db:
         condition: service_healthy
     networks:
-      - topup_network
+      - xyozi_network
+    restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost"]
       interval: 30s
@@ -38,17 +38,14 @@ services:
   # ============================================
   db:
     image: mysql:8.0
-    container_name: topup_games_db
+    container_name: xyozi_store_db
     environment:
       - MYSQL_ROOT_PASSWORD=root_password
       - MYSQL_DATABASE=topup_games
       - MYSQL_USER=docker
       - MYSQL_PASSWORD=docker_password
-    ports:
-      - "3307:3306"
     volumes:
-      - mysql_data:/var/lib/mysql
-      - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf:ro
+      - mysql_data_topup:/var/lib/mysql
       - ./DATABASENYA.sql:/docker-entrypoint-initdb.d/1-database.sql:ro
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot_password"]
@@ -57,11 +54,12 @@ services:
       retries: 5
       start_period: 30s
     networks:
-      - topup_network
+      - xyozi_network
+    restart: unless-stopped
 
 networks:
-  topup_network:
+  xyozi_network:
     driver: bridge
 
 volumes:
-  mysql_data:
+  mysql_data_topup:
