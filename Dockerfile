@@ -56,7 +56,8 @@ COPY . /var/www/html/
 RUN composer install --no-dev --optimize-autoloader --no-interaction || true
 
 # Set permissions
-RUN chown -R www-data:www-data /var/www/html \
+RUN mkdir -p /var/www/html/writable /var/www/html/public \
+    && chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/writable \
     && chmod -R 755 /var/www/html/public
 
