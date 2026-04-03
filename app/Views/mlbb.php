@@ -161,7 +161,7 @@
                                             <span class="text-left text-xs font-bold x-color-g my-1 mt-2">Rp. <?= number_format($p['harga']) ?></span>
                                         </div>
                                         <div class="flex items-center ms-auto">
-                                                <img src="<?= base_url('public/img/produk/' . $Logo); ?>" class="mx-auto w-8" alt="Logo Produk">
+                                                <img src="<?= base_url('img/produk/' . $Logo); ?>" class="mx-auto w-8" alt="Logo Produk">
                                         </div>
                                     </div>
                                     <div id="selectedIndicator<?= $p['durasi'] ?>" class="absolute right-0 bottom-0 px-2 x-bg-g select-check hidden">

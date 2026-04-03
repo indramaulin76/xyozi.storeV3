@@ -176,7 +176,7 @@
                                         </div>
                                         <div class="flex items-center ms-auto">
                                             <?php if (!empty($p['logo'])) : ?>
-                                                <img src="<?= base_url('public/img/produk/' . $p['logo']); ?>" class="mx-auto w-8" alt="Logo Produk">
+                                                <img src="<?= base_url('img/produk/' . $p['logo']); ?>" class="mx-auto w-8" alt="Logo Produk">
                                             <?php endif; ?>
                                         </div>
                                     </div>
@@ -210,7 +210,7 @@
                                         </div>
                                         <div class="flex items-center ms-auto">
                                             <?php if (!empty($p['logo'])) : ?>
-                                                <img src="<?= base_url('public/img/produk/' . $p['logo']); ?>" class="mx-auto w-8" alt="Logo Produk">
+                                                <img src="<?= base_url('img/produk/' . $p['logo']); ?>" class="mx-auto w-8" alt="Logo Produk">
                                             <?php endif; ?>
                                         </div>
                                     </div>

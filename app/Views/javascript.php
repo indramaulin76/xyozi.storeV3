@@ -66,7 +66,7 @@
             response.forEach(function(banner) {
                 $('#swiper').append(
                     '<div class="swiper-slide">' +
-                    '<img src="<?= base_url('public/img/banner/') ?>' + banner.gambar + '" alt="<?= $web['web_title'] ?>" loading="lazy">' +
+                    '<img src="<?= base_url('img/banner/') ?>' + banner.gambar + '" alt="<?= $web['web_title'] ?>" loading="lazy">' +
                     '</div>'
                 );
             });
@@ -99,7 +99,7 @@ function loadFlashSale() {
                     $('.swiper-wrapper-fs').append(
                         '<div onclick="location.href=\'beli/' + gamesFs.slug + '\'" class="swiper-slide swiper-slide-fs bg-murky-800">' +
                         '<div class="ribbon"><span>' + produkFs.persen_diskon + '% OFF</span></div>' +
-                        '<img src="<?= base_url('public/img/games/') ?>' + gamesFs.gambar + '" alt="Gambar" />' +
+                        '<img src="<?= base_url('img/games/') ?>' + gamesFs.gambar + '" alt="Gambar" />' +
                         '<div class="name-fs text-white text-sm font-semibold flex flex-nowrap">' + produkFs.nama + '</div>' +
                         '<div class="subname-fs text-gray-300 text-xs">' + produkFs.brand + '</div>' +
                         '</div>'

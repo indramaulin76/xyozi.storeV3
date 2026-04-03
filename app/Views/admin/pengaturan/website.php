@@ -25,7 +25,7 @@
               <div class="w-full">
                 <?php if (!empty($settings['web_icon'])) : ?>
                 <div>
-                  <img src="<?= base_url('public/img/web/' . $settings['web_icon']) ?>" alt="Web Icon" class="mb-2" style="width: 50px;">
+                  <img src="<?= base_url('img/web/' . $settings['web_icon']) ?>" alt="Web Icon" class="mb-2" style="width: 50px;">
                 </div>
                 <?php endif; ?>
                   <label for="icon" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Icon</label>
@@ -34,7 +34,7 @@
               <div class="w-full">
                 <?php if (!empty($settings['web_logo'])) : ?>
                 <div>
-                  <img src="<?= base_url('public/img/web/' . $settings['web_logo']) ?>" alt="Web Logo" class="mb-2" style="width: 150px; height: 50px;">
+                  <img src="<?= base_url('img/web/' . $settings['web_logo']) ?>" alt="Web Logo" class="mb-2" style="width: 150px; height: 50px;">
                 </div>
                 <?php endif; ?>
                   <label for="logo" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Logo</label>
