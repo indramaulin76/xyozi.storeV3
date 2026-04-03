@@ -1,0 +1,61 @@
+# Git
+.git
+.gitignore
+
+# Docker files (di-build dari context)
+docker/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Cache
+cache/*
+!cache/index.html
+
+# Environment files (keep .env.docker only)
+.env
+.env.*
+!.env.docker
+
+# Vendor (di-install saat build)
+# vendor/
+
+# Tests
+tests/
+
+# Documentation
+README.md
+LICENSE
+*.md
+
+# Composer files
+composer.lock
+
+# System files
+cookies.txt
+error_log
+
+# Database SQL files except main one
+*.sql
+!DATABASENYA.sql
+
+# Temporary files
+tmp/*
+!tmp/index.html
+
+# Writable directories (will be created fresh)
+writable/cache/*
+writable/logs/*
+writable/session/*
+writable/uploads/*

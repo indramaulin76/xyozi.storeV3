@@ -1,0 +1,39 @@
+# CodeIgniter 4
+/vendor/
+/writable/
+/node_modules/
+/.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.backup
+.env.docker
+
+# Logs
+writable/logs/*
+!writable/logs/index.html
+
+# Cache
+writable/cache/*
+!writable/cache/index.html
+
+# Session
+writable/session/*
+!writable/session/index.html
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+Thumbs.db
+
+# Docker
+docker/
+docker-compose.override.yml
+
+# Build
+public/build/
