@@ -38,9 +38,9 @@ class Order extends BaseController
     
         $json = $this->request->getJSON();
     
-        $uid = $json->uid;
-        $server = $json->server;
-        $target = $json->target;
+        $uid = $json->uid ?? '';
+        $server = $json->server ?? '';
+        $target = $json->target ?? '';
     
         if (empty($uid) || empty($server)) {
             return $this->response->setJSON(['error' => 'UID dan server harus diisi.']);
@@ -97,21 +97,21 @@ class Order extends BaseController
         }
         
         $json = $this->request->getJSON();
-        $uid = strip_tags(htmlspecialchars(html_entity_decode($json->uid, ENT_QUOTES, 'UTF-8')));
-        $server = strip_tags(htmlspecialchars(html_entity_decode($json->server, ENT_QUOTES, 'UTF-8')));
-        $username = strip_tags(htmlspecialchars(html_entity_decode($json->username, ENT_QUOTES, 'UTF-8')));
-        $productPrice = strip_tags(htmlspecialchars(html_entity_decode($json->productPrice, ENT_QUOTES, 'UTF-8')));
-        $productName = strip_tags(htmlspecialchars(html_entity_decode($json->productName, ENT_QUOTES, 'UTF-8')));
-        $productCode = strip_tags(htmlspecialchars(html_entity_decode($json->productCode, ENT_QUOTES, 'UTF-8')));
-        $metodeCode = strip_tags(htmlspecialchars(html_entity_decode($json->metodeCode, ENT_QUOTES, 'UTF-8')));
-        $metodeName = strip_tags(htmlspecialchars(html_entity_decode($json->metodeName, ENT_QUOTES, 'UTF-8')));
-        $whatsapp = strip_tags(htmlspecialchars(html_entity_decode($json->whatsapp, ENT_QUOTES, 'UTF-8')));
-        $voucher = strip_tags(htmlspecialchars(html_entity_decode($json->voucher, ENT_QUOTES, 'UTF-8')));
+        $uid = strip_tags(htmlspecialchars(html_entity_decode($json->uid ?? '', ENT_QUOTES, 'UTF-8')));
+        $server = strip_tags(htmlspecialchars(html_entity_decode($json->server ?? '', ENT_QUOTES, 'UTF-8')));
+        $username = strip_tags(htmlspecialchars(html_entity_decode($json->username ?? '', ENT_QUOTES, 'UTF-8')));
+        $productPrice = strip_tags(htmlspecialchars(html_entity_decode($json->productPrice ?? '', ENT_QUOTES, 'UTF-8')));
+        $productName = strip_tags(htmlspecialchars(html_entity_decode($json->productName ?? '', ENT_QUOTES, 'UTF-8')));
+        $productCode = strip_tags(htmlspecialchars(html_entity_decode($json->productCode ?? '', ENT_QUOTES, 'UTF-8')));
+        $metodeCode = strip_tags(htmlspecialchars(html_entity_decode($json->metodeCode ?? '', ENT_QUOTES, 'UTF-8')));
+        $metodeName = strip_tags(htmlspecialchars(html_entity_decode($json->metodeName ?? '', ENT_QUOTES, 'UTF-8')));
+        $whatsapp = strip_tags(htmlspecialchars(html_entity_decode($json->whatsapp ?? '', ENT_QUOTES, 'UTF-8')));
+        $voucher = strip_tags(htmlspecialchars(html_entity_decode($json->voucher ?? '', ENT_QUOTES, 'UTF-8')));
         
         //MLBB
-        $namanya = strip_tags(htmlspecialchars(html_entity_decode($json->nama, ENT_QUOTES, 'UTF-8')));
-        $targetnya = strip_tags(htmlspecialchars(html_entity_decode($json->target, ENT_QUOTES, 'UTF-8')));
-        $providernya = strip_tags(htmlspecialchars(html_entity_decode($json->provider, ENT_QUOTES, 'UTF-8')));
+        $namanya = strip_tags(htmlspecialchars(html_entity_decode($json->nama ?? '', ENT_QUOTES, 'UTF-8')));
+        $targetnya = strip_tags(htmlspecialchars(html_entity_decode($json->target ?? '', ENT_QUOTES, 'UTF-8')));
+        $providernya = strip_tags(htmlspecialchars(html_entity_decode($json->provider ?? '', ENT_QUOTES, 'UTF-8')));
         
         if($providernya == "RG"){
         $produkModel = new MlbbLayanan();

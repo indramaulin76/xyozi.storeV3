@@ -33,10 +33,10 @@ class Topup extends BaseController
         }
         
         $json = $this->request->getJSON();
-        $nominal = html_entity_decode($json->nominal, ENT_QUOTES, 'UTF-8');
-        $whatsapp = strip_tags(htmlspecialchars(html_entity_decode($json->whatsapp, ENT_QUOTES, 'UTF-8')));
-        $metodeCode = html_entity_decode($json->metodeCode, ENT_QUOTES, 'UTF-8');
-        $metodeName = html_entity_decode($json->metodeName, ENT_QUOTES, 'UTF-8');
+        $nominal = html_entity_decode($json->nominal ?? '', ENT_QUOTES, 'UTF-8');
+        $whatsapp = strip_tags(htmlspecialchars(html_entity_decode($json->whatsapp ?? '', ENT_QUOTES, 'UTF-8')));
+        $metodeCode = html_entity_decode($json->metodeCode ?? '', ENT_QUOTES, 'UTF-8');
+        $metodeName = html_entity_decode($json->metodeName ?? '', ENT_QUOTES, 'UTF-8');
     
         $uniqueTopupID = false;
         $maxAttempts = 10;
