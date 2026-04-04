@@ -150,42 +150,60 @@ class Order extends BaseController
             $hargaJual = $produk['harga_jual'];
         }
         }
-        
 
-        //START VOUCHER
+        //START VOUCHER - with null check
         $voucherModel = new VoucherModel();
-        $voucherKode = $voucherModel->where('kode', $voucher)->first();
-        $kodeVoucher = $voucherKode['kode'];
-        $stok = $voucherKode['stok'];
-        $persen = $voucherKode['persen'];
-        $maksimal_potongan = $voucherKode['max_potongan'];
+        $voucherKode = null;
+        $kodeVoucher = null;
+        $stok = 0;
+        $persen = 0;
+        $maksimal_potongan = 0;
         
-        if($voucher == true AND $kodeVoucher == false){
-          return $this->response->setJSON(['success' => false, 'message' => 'invalid respon']);
-        } elseif ($voucher == true AND $stok == 0) {
-          return $this->response->setJSON(['success' => false, 'message' => 'invalid respon']);  
-        } else {
-          if($kodeVoucher == true){
-          $discount = (($hargaJual * $persen) / 100);
-          $PostHarga_Jual = ($hargaJual - $discount);
-          $PostJual = $PostHarga_Jual;
-          
-          if($discount > $maksimal_potongan) {
-             $hargaJual =  $hargaJual -$maksimal_potongan;
-             //return $this->response->setJSON(['success' => false, 'message' => 'Diskon Melebihi Mak! JUAL:'.$hargaJual.' Diskon Yaitu '.$discount.' ']);  
-          } else {
-             $hargaJual  = $hargaJual - $discount; 
-             //return $this->response->setJSON(['success' => false, 'message' => 'Diskon Aman3! '.$hargaJual.' Diskon Yaitu '.$discount.' ']);  
-          }
-          
-          
-        $stokAkhir = $stok - 1;
-        $dataVoucher = [
-                    'stok' => ''.$stokAkhir.'',
-                ];
-    
-        $voucherModel->update($voucherKode['id'], $dataVoucher);
-          }
+        // Validasi metode pembayaran harus dipilih
+        if (empty($metodeCode)) {
+            return $this->response->setJSON(['success' => false, 'message' => 'Pilih metode pembayaran!']);
+        }
+        
+        // Validasi produk tidak kosong
+        if (empty($produk)) {
+            return $this->response->setJSON(['success' => false, 'message' => 'Produk tidak ditemukan!']);
+        }
+        
+        // Cek voucher hanya jika diisi
+        if (!empty($voucher)) {
+            $voucherKode = $voucherModel->where('kode', $voucher)->first();
+            
+            if (empty($voucherKode)) {
+                return $this->response->setJSON(['success' => false, 'message' => 'Kode voucher tidak valid!']);
+            }
+            
+            $kodeVoucher = $voucherKode['kode'];
+            $stok = $voucherKode['stok'];
+            $persen = $voucherKode['persen'];
+            $maksimal_potongan = $voucherKode['max_potongan'];
+            
+            if ($stok == 0) {
+                return $this->response->setJSON(['success' => false, 'message' => 'Stok voucher habis!']);
+            }
+            
+            // Hitung diskon
+            $discount = (($hargaJual * $persen) / 100);
+            $PostHarga_Jual = ($hargaJual - $discount);
+            $PostJual = $PostHarga_Jual;
+            
+            if ($discount > $maksimal_potongan) {
+                $hargaJual = $hargaJual - $maksimal_potongan;
+            } else {
+                $hargaJual = $hargaJual - $discount;
+            }
+            
+            // Kurangi stok voucher
+            $stokAkhir = $stok - 1;
+            $dataVoucher = ['stok' => $stokAkhir];
+            $voucherModel->update($voucherKode['id'], $dataVoucher);
+        }
+        
+        // Generate unique order ID
         $uniqueOrderID = false;
         $maxAttempts = 10;
     
@@ -274,15 +292,19 @@ class Order extends BaseController
                         'nomor_whatsapp' => $whatsapp,
                         'note' => 'Transaksi sedang di proses',
                     ];
-              
-                    $this->pembelianModel->insert($data);
+               
+                    try {
+                        $this->pembelianModel->insert($data);
+                    } catch (\Exception $e) {
+                        return $this->response->setJSON(['success' => false, 'message' => 'Gagal menyimpan pesanan: ' . $e->getMessage()]);
+                    }
                     
                     $newBalance = floatval($user['balance']) - floatval($hargaJual);
                     $userModel->update($user['id'], ['balance' => $newBalance]);
               
                     return $this->response->setJSON(['success' => true, 'orderID' => $orderID]);
                 } else {
-                    return $this->response->setJSON(['success' => false, 'message' => 'Gagal kesalahan Provider, msg: ' . $responseData['message']]);
+                    return $this->response->setJSON(['success' => false, 'message' => 'Gagal kesalahan Provider, msg: ' . ($responseData['message'] ?? 'Unknown error')]);
                 }
             } elseif ($produk['provider'] == 'DF') {
                 $apiDF = $apiProviderModel->where('kode', 'DF')->first();
@@ -330,10 +352,14 @@ class Order extends BaseController
                         'status_pembelian' => 'Proses',
                         'status_refund' => 'gagal',
                         'nomor_whatsapp' => $whatsapp,
-                        'note' => $responseData['data']['message'],
+                        'note' => $responseData['data']['message'] ?? 'Transaksi diproses',
                     ];
-              
-                    $this->pembelianModel->insert($data);
+               
+                    try {
+                        $this->pembelianModel->insert($data);
+                    } catch (\Exception $e) {
+                        return $this->response->setJSON(['success' => false, 'message' => 'Gagal menyimpan pesanan: ' . $e->getMessage()]);
+                    }
                     
                     $newBalance = floatval($user['balance']) - floatval($hargaJual);
                     $userModel->update($user['id'], ['balance' => $newBalance]);
@@ -341,7 +367,7 @@ class Order extends BaseController
                     return $this->response->setJSON(['success' => true, 'orderID' => $orderID]);
                     
                 } else {
-                  return $this->response->setJSON(['success' => false, 'message' => 'Gagal kesalahan Provider, msg: ' . $responseData['data']['rc']]);
+                  return $this->response->setJSON(['success' => false, 'message' => 'Gagal kesalahan Provider, msg: ' . ($responseData['data']['rc'] ?? 'Unknown error')]);
                 }
             } elseif ($produk['provider'] == 'AG') {
                 $apiAG = $apiProviderModel->where('kode', 'AG')->first();
@@ -393,8 +419,12 @@ class Order extends BaseController
                         'nomor_whatsapp' => $whatsapp,
                         'note' => 'Transaksi sedang diproses',
                     ];
-              
-                    $this->pembelianModel->insert($data);
+               
+                    try {
+                        $this->pembelianModel->insert($data);
+                    } catch (\Exception $e) {
+                        return $this->response->setJSON(['success' => false, 'message' => 'Gagal menyimpan pesanan: ' . $e->getMessage()]);
+                    }
                     
                     $newBalance = floatval($user['balance']) - floatval($hargaJual);
                     $userModel->update($user['id'], ['balance' => $newBalance]);
@@ -402,7 +432,7 @@ class Order extends BaseController
                     return $this->response->setJSON(['success' => true, 'orderID' => $orderID]);
                     
                 } else {
-                  return $this->response->setJSON(['success' => false, 'message' => 'Gagal kesalahan Provider, msg: ' . $responseData['error_msg']]);
+                  return $this->response->setJSON(['success' => false, 'message' => 'Gagal kesalahan Provider, msg: ' . ($responseData['error_msg'] ?? 'Unknown error')]);
                 }
             } elseif ($produk['provider'] == 'RG') {
                 
@@ -454,15 +484,17 @@ class Order extends BaseController
                     'nomor_whatsapp' => $whatsapp,
                     'note' => 'Pesanan sudah di proses',
                 ];
-          
-                $this->pembelianModel->insert($data);
-                
-                
+           
+                try {
+                    $this->pembelianModel->insert($data);
+                } catch (\Exception $e) {
+                    return $this->response->setJSON(['success' => false, 'message' => 'Gagal menyimpan pesanan: ' . $e->getMessage()]);
+                }
                 
                 $newBalance = floatval($user['balance']) - floatval($hargaJual);
                 $userModel->update($user['id'], ['balance' => $newBalance]);
                 
-                return $this->response->setJSON(['success' => true, 'orderID' => $orderID,]);
+                return $this->response->setJSON(['success' => true, 'orderID' => $orderID]);
 
             } elseif ($produk['provider'] == 'Manual') {
                     
@@ -490,7 +522,11 @@ class Order extends BaseController
                     'note' => 'Pesanan sedang di proses',
                 ];
           
-                $this->pembelianModel->insert($data);
+                try {
+                    $this->pembelianModel->insert($data);
+                } catch (\Exception $e) {
+                    return $this->response->setJSON(['success' => false, 'message' => 'Gagal menyimpan pesanan: ' . $e->getMessage()]);
+                }
                 
                 $newBalance = floatval($user['balance']) - floatval($hargaJual);
                 $userModel->update($user['id'], ['balance' => $newBalance]);
@@ -607,12 +643,16 @@ class Order extends BaseController
                     $dataItem['checkout_url']),
                   'status_pembayaran' => 'Unpaid',
                   'batas_pembayaran' => $batas_pembayaran,
-                  'cara_bayar' => '<p>Pastikan anda melakukan pembayaran sebelum melewati batas waktu pembayaran dengan nominal yang tepat. Terimakasih Banyak !</p>',
+                  'cara_bayar' => '<p>Pastikan anda melakukan pembayaran sebelum melewati batas waktu pembayaran dengan nominal yang tepat. Terimamente Banyak !</p>',
                   'status_pembelian' => 'Pending',
                   'nomor_whatsapp' => $whatsapp,
                   'note' => '',
               ];
-              $this->pembelianModel->insert($data);
+              try {
+                  $this->pembelianModel->insert($data);
+              } catch (\Exception $e) {
+                  return $this->response->setJSON(['success' => false, 'message' => 'Gagal menyimpan pesanan: ' . $e->getMessage()]);
+              }
             } else {
                 $data = [
                   'user_id' => empty($user['id']) ? "Tidak Login" : $user['id'],
@@ -642,7 +682,11 @@ class Order extends BaseController
                   'note' => '',
               ];
       
-              $this->pembelianModel->insert($data);
+              try {
+                  $this->pembelianModel->insert($data);
+              } catch (\Exception $e) {
+                  return $this->response->setJSON(['success' => false, 'message' => 'Gagal menyimpan pesanan: ' . $e->getMessage()]);
+              }
                 
             }
 
