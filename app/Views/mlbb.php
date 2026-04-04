@@ -478,14 +478,21 @@
     }
 
     function placeOrder() {
-        var nama = document.getElementById("nama").value;
-        var target = document.getElementById("target").value;
-        var tipe = document.getElementById("tipe").value;
-        var provider = document.getElementById("provider").value;
-        var username = document.getElementById("username").value;
+        var namaElement = document.getElementById("nama");
+        var targetElement = document.getElementById("target");
+        var tipeElement = document.getElementById("tipe");
+        var providerElement = document.getElementById("provider");
+        var usernameElement = document.getElementById("username");
+        var whatsappElement = document.getElementById("whatsapp");
+        
+        var nama = namaElement ? namaElement.value : '';
+        var target = targetElement ? targetElement.value : '';
+        var tipe = tipeElement ? tipeElement.value : '';
+        var provider = providerElement ? providerElement.value : '';
+        var username = usernameElement ? usernameElement.value : '';
         var selectedProductPrice = document.getElementById('selectedProductHarga').innerText.replace('Rp. ', '').replace(/,/g, '').replace(/\./g, '');
         var selectedProductName = document.getElementById('selectedProductNama').innerText;
-        var whatsappNumber = document.getElementById("whatsapp").value;
+        var whatsappNumber = whatsappElement ? whatsappElement.value : '';
 
         var errorMessages = [];
         
@@ -569,15 +576,17 @@
         didOpen: () => {
           Swal.showLoading();
           const timer = Swal.getPopup().querySelector("b");
-          timerInterval = setInterval(() => {
-            timer.textContent = `${Swal.getTimerLeft()}`;
-          }, 1000);
+          if (timer) {
+            timerInterval = setInterval(() => {
+              timer.textContent = `${Swal.getTimerLeft()}`;
+            }, 1000);
+          }
         },
         willClose: () => {
           clearInterval(timerInterval);
         }
       });
-    
+
       fetch('<?= base_url('order/prosesPayment') ?>', {
         method: 'POST',
         headers: {

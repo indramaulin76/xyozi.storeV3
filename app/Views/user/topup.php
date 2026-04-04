@@ -305,7 +305,8 @@
   }
   
   function placeTopup() {
-    var nominal = document.getElementById("nominal").value;
+    var nominalElement = document.getElementById("nominal");
+    var nominal = nominalElement ? nominalElement.value : '';
     
     var errorMessages = [];
     
@@ -376,9 +377,11 @@
       didOpen: () => {
         Swal.showLoading();
         const timer = Swal.getPopup().querySelector("b");
-        timerInterval = setInterval(() => {
-          timer.textContent = `${Swal.getTimerLeft()}`;
-        }, 1000);
+        if (timer) {
+          timerInterval = setInterval(() => {
+            timer.textContent = `${Swal.getTimerLeft()}`;
+          }, 1000);
+        }
       },
       willClose: () => {
         clearInterval(timerInterval);

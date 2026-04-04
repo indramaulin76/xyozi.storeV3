@@ -528,12 +528,16 @@
     }
 
     function placeOrder() {
-        var uid = document.getElementById("uid").value;
-        var server = document.getElementById("server").value;
-        var target = document.getElementById("target").value;
+        var uidElement = document.getElementById("uid");
+        var serverElement = document.getElementById("server");
+        var targetElement = document.getElementById("target");
+        var uid = uidElement ? uidElement.value : '';
+        var server = serverElement ? serverElement.value : '';
+        var target = targetElement ? targetElement.value : '';
         var selectedProductPrice = document.getElementById('selectedProductHarga').innerText.replace('Rp. ', '').replace(/,/g, '').replace(/\./g, '');
         var selectedProductName = document.getElementById('selectedProductNama').innerText;
-        var whatsappNumber = document.getElementById("whatsapp").value;
+        var whatsappElement = document.getElementById("whatsapp");
+        var whatsappNumber = whatsappElement ? whatsappElement.value : '';
         
         // Joki
         const formJoki = "<?php echo $games['tipe_target']; ?>";
@@ -622,9 +626,11 @@
         didOpen: () => {
           Swal.showLoading();
           const timer = Swal.getPopup().querySelector("b");
-          timerInterval = setInterval(() => {
-            timer.textContent = `${Swal.getTimerLeft()}`;
-          }, 1000);
+          if (timer) {
+            timerInterval = setInterval(() => {
+              timer.textContent = `${Swal.getTimerLeft()}`;
+            }, 1000);
+          }
         },
         willClose: () => {
           clearInterval(timerInterval);
@@ -777,15 +783,17 @@
         didOpen: () => {
           Swal.showLoading();
           const timer = Swal.getPopup().querySelector("b");
-          timerInterval = setInterval(() => {
-            timer.textContent = `${Swal.getTimerLeft()}`;
-          }, 1000);
+          if (timer) {
+            timerInterval = setInterval(() => {
+              timer.textContent = `${Swal.getTimerLeft()}`;
+            }, 1000);
+          }
         },
         willClose: () => {
           clearInterval(timerInterval);
         }
       });
-    
+
       fetch('<?= base_url('order/prosesPayment') ?>', {
         method: 'POST',
         headers: {
@@ -826,15 +834,17 @@
         didOpen: () => {
           Swal.showLoading();
           const timer = Swal.getPopup().querySelector("b");
-          timerInterval = setInterval(() => {
-            timer.textContent = `${Swal.getTimerLeft()}`;
-          }, 1000);
+          if (timer) {
+            timerInterval = setInterval(() => {
+              timer.textContent = `${Swal.getTimerLeft()}`;
+            }, 1000);
+          }
         },
         willClose: () => {
           clearInterval(timerInterval);
         }
       });
-    
+
       fetch('<?= base_url('order/prosesPayment') ?>', {
         method: 'POST',
         headers: {
