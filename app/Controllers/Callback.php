@@ -396,12 +396,13 @@ public function callbackSakurupiah()
         }
         
         // Ambil data dari Digiflazz
-        // Digiflazz biasanya mengirim: ref_id, trx_id, status
-        $trxId = $json['trx_id'] ?? $json['transaction_id'] ?? '';
-        $refId = $json['ref_id'] ?? $json['merchant_ref'] ?? $json['reference'] ?? '';
-        $status = $json['status'] ?? '';
-        $message = $json['message'] ?? $json['rc'] ?? '';
+        // Support format: $json['data']['ref_id'] atau $json['ref_id']
+        $trxId = $json['data']['trx_id'] ?? $json['trx_id'] ?? $json['transaction_id'] ?? '';
+        $refId = $json['data']['ref_id'] ?? $json['ref_id'] ?? $json['merchant_ref'] ?? $json['reference'] ?? '';
+        $status = $json['data']['status'] ?? $json['status'] ?? '';
+        $message = $json['data']['message'] ?? $json['message'] ?? $json['rc'] ?? '';
         
+        log_message('info', 'Callback Digiflazz MASUK - ref_id: ' . ($refId ?? 'NULL') . ' - trx_id: ' . ($trxId ?? 'NULL'));
         log_message('info', "Digiflazz webhook RAW JSON: " . json_encode($json));
         log_message('info', "Digiflazz webhook data: trx_id=$trxId, ref_id=$refId, status=$status, message=$message");
         
