@@ -471,13 +471,20 @@ public function callbackSakurupiah()
         $updateData = [
             'status_pembayaran' => $dbStatus,
             'status_pembelian' => $orderStatus,
-            'note' => 'Pesanan Sukses'
+            'note' => ($orderStatus === 'Sukses') ? 'Pesanan Sukses' : 'Pesanan Gagal'
         ];
         
         try {
             $pembelianModel->update($order['id'], $updateData);
             
             log_message('info', "Digiflazz webhook: Order $refId updated to status_pembelian=$orderStatus, status_pembayaran=$dbStatus");
+            
+            // Kirim WhatsApp hanya untuk Sukses atau Gagal
+            if ($orderStatus === 'Sukses') {
+                $this->sendWhatsAppNotification($order['nomor_whatsapp'], $order, 'sukses');
+            } elseif ($orderStatus === 'Gagal') {
+                $this->sendWhatsAppNotification($order['nomor_whatsapp'], $order, 'gagal');
+            }
             
             return $this->response->setJSON([
                 'success' => true,
@@ -497,10 +504,36 @@ public function callbackSakurupiah()
         }
     }
     
-    private function sendWhatsAppNotification($whatsapp, $orderId, $type)
+    private function sendWhatsAppNotification($whatsapp, $order, $type)
     {
-        // Fungsi helper untuk mengirim WhatsApp notification
-        // Implementasi sesuai kebutuhan
+        if (empty($whatsapp)) {
+            log_message('error', 'WhatsApp notification: No whatsapp number');
+            return false;
+        }
+        
+        $tanggal = date('d F Y', strtotime($order['created_at'] ?? date('Y-m-d')));
+        
+        if ($type === 'sukses') {
+            $message = "⚡ *PEMBAYARAN BERHASIL!* ⚡\n\n";
+            $message .= "Halo Kak, pesanan kamu di *Xyozi Store* sudah sukses terkirim!\n\n";
+            $message .= "📝 *No. Invoice:* " . $order['order_id'] . " (Simpan untuk cek transaksi)\n";
+            $message .= "🎮 *Produk:* " . $order['produk'] . "\n";
+            $message .= "✅ *Status:* SUKSES\n";
+            $message .= "📅 *Tanggal:* " . $tanggal . "\n\n";
+            $message .= "*Terima kasih telah mempercayai Xyozi Store!* 🚀";
+        } elseif ($type === 'gagal') {
+            $message = "⚠️ *PEMBAYARAN GAGAL!* ⚠️\n\n";
+            $message .= "Halo Kak, pesanan kamu di *Xyozi Store* gagal.\n\n";
+            $message .= "📝 *No. Invoice:* " . $order['order_id'] . "\n";
+            $message .= "🎮 *Produk:* " . $order['produk'] . "\n";
+            $message .= "❌ *Status:* GAGAL\n";
+            $message .= "📅 *Tanggal:* " . $tanggal . "\n\n";
+            $message .= "*Silakan hubungi admin untuk info lebih lanjut!* 📩";
+        } else {
+            return false;
+        }
+        
+        return $this->sendUserWhatsappMessage($whatsapp, $message);
     }
         
 }
