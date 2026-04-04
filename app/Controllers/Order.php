@@ -33,6 +33,10 @@ class Order extends BaseController
         $apiProviderModel = new ApiProviderModel();
         $api = $apiProviderModel->where('kode', 'Vip')->first();
         
+        if (empty($api)) {
+            return $this->response->setJSON(['error' => 'API Provider tidak ditemukan atau tidak aktif.']);
+        }
+        
         $apiId = $api['api_id'];
         $apiKey = $api['api_key'];
     
@@ -169,6 +173,33 @@ class Order extends BaseController
             return $this->response->setJSON(['success' => false, 'message' => 'Produk tidak ditemukan!']);
         }
         
+        // Validasi field produk yang diperlukan
+        if (empty($produk['kode_produk']) || empty($produk['provider'])) {
+            return $this->response->setJSON(['success' => false, 'message' => 'Produk tidak lengkap, hubungi administrator!']);
+        }
+        
+        // Validasi API provider aktif
+        $apiProviderModel = new ApiProviderModel();
+        $providerKode = $produk['provider'];
+        
+        // Mapping provider code
+        $providerMap = [
+            'Vip' => 'Vip',
+            'DF' => 'DF',
+            'AG' => 'AG',
+            'RG' => 'RG',
+            'Manual' => null, // Tidak perlu API
+            'Sp' => 'Sp',
+            'Ft' => 'Ft'
+        ];
+        
+        if (isset($providerMap[$providerKode]) && $providerMap[$providerKode] !== null) {
+            $apiProvider = $apiProviderModel->where('kode', $providerMap[$providerKode])->first();
+            if (empty($apiProvider)) {
+                return $this->response->setJSON(['success' => false, 'message' => 'Provider/API tidak aktif, hubungi administrator!']);
+            }
+        }
+        
         // Cek voucher hanya jika diisi
         if (!empty($voucher)) {
             $voucherKode = $voucherModel->where('kode', $voucher)->first();
@@ -240,6 +271,10 @@ class Order extends BaseController
             if ($produk['provider'] == 'Vip') {
                 $apiVip = $apiProviderModel->where('kode', 'Vip')->first();
                 
+                if (empty($apiVip)) {
+                    return $this->response->setJSON(['success' => false, 'message' => 'API Vip tidak aktif!']);
+                }
+                
                 $apiId = $apiVip['api_id'];
                 $apiKey = $apiVip['api_key'];
                 $sign = md5($apiId . $apiKey);
@@ -309,6 +344,10 @@ class Order extends BaseController
             } elseif ($produk['provider'] == 'DF') {
                 $apiDF = $apiProviderModel->where('kode', 'DF')->first();
                 
+                if (empty($apiDF)) {
+                    return $this->response->setJSON(['success' => false, 'message' => 'API DF tidak aktif!']);
+                }
+                
                 $userdigi = $apiDF['api_id'];
                 $apiKey = $apiDF['api_key'];
             
@@ -371,6 +410,10 @@ class Order extends BaseController
                 }
             } elseif ($produk['provider'] == 'AG') {
                 $apiAG = $apiProviderModel->where('kode', 'AG')->first();
+                
+                if (empty($apiAG)) {
+                    return $this->response->setJSON(['success' => false, 'message' => 'API AG tidak aktif!']);
+                }
                 
                 $merchant_id = $apiAG['api_id'];
                 $secret_key = $apiAG['api_key'];
@@ -438,6 +481,11 @@ class Order extends BaseController
                 
                 $apiProviderModel = new ApiProviderModel();
                 $api = $apiProviderModel->where('kode', 'RG')->first();
+                
+                if (empty($api)) {
+                    return $this->response->setJSON(['success' => false, 'message' => 'API RG tidak aktif!']);
+                }
+                
                 $apiKey = $api['api_key'];
                 
                 $dataPost = [
@@ -543,6 +591,10 @@ class Order extends BaseController
           
           $apiProviderModel = new ApiProviderModel();
           $api = $apiProviderModel->where('kode', 'Sp')->first();
+          
+          if (empty($api)) {
+              return $this->response->setJSON(['success' => false, 'message' => 'Payment Gateway tidak aktif!']);
+          }
           
             $api_id = $api['api_id']; 
             $data_method =$metodeCode; 
@@ -735,8 +787,17 @@ class Order extends BaseController
     
     private function sendUserWhatsappMessage($whatsapp, $whatsappMessage)
     {
+        if (empty($whatsapp) || empty($whatsappMessage)) {
+            return false;
+        }
+        
         $apiProviderModel = new ApiProviderModel();
         $api = $apiProviderModel->where('kode', 'Ft')->first();
+        
+        if (empty($api)) {
+            log_message('error', 'WhatsApp API Ft tidak ditemukan');
+            return false;
+        }
         
         $curl = curl_init();
     

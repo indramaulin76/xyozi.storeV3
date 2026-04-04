@@ -659,15 +659,19 @@ viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
       var bodyElement = document.body;
   
       function showModal() {
-          modal.classList.remove("hidden");
-          backdrop.classList.remove("hidden");
-          bodyElement.style.overflow = "hidden";
+          if (modal) {
+              modal.classList.remove("hidden");
+              backdrop.classList.remove("hidden");
+              bodyElement.style.overflow = "hidden";
+          }
       }
   
       function hideModal() {
-          modal.classList.add("hidden");
-          backdrop.classList.add("hidden");
-          bodyElement.style.overflow = "auto";
+          if (modal && modal.classList) {
+              modal.classList.add("hidden");
+              backdrop.classList.add("hidden");
+              bodyElement.style.overflow = "auto";
+          }
       }
   
       function getLocalStorage(key) {
