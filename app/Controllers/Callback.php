@@ -355,5 +355,110 @@ public function callbackSakurupiah()
         
         return $response;
     }
-       
+    
+    // ============================================
+    // Digiflazz Webhook Callback
+    // URL: https://xyozistore.my.id/api/webhook/digiflazz
+    // ============================================
+    public function webhookDigiflazz()
+    {
+        $request = service('request');
+        $json = $request->getJSON(true);
+        
+        if (empty($json)) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'No data received'
+            ]);
+        }
+        
+        // Validasi signature (jika Digiflazz mengirimkan signature)
+        // Secret yang diharapkan: XyoziStoreSecret2026
+        $expectedSecret = 'XyoziStoreSecret2026';
+        $receivedSignature = $_SERVER['HTTP_X_SIGNATURE'] ?? '';
+        
+        // Jika ada signature, validasi (opsional tergantung Digiflazz)
+        if (!empty($receivedSignature) && $receivedSecret !== $expectedSecret) {
+            log_message('error', 'Digiflazz webhook: Invalid signature');
+            return $this->response->setStatusCode(403)->setJSON([
+                'success' => false,
+                'message' => 'Invalid signature'
+            ]);
+        }
+        
+        // Ambil data dari Digiflazz
+        $trxId = $json['trx_id'] ?? '';
+        $refId = $json['ref_id'] ?? '';
+        $status = $json['status'] ?? '';
+        $message = $json['message'] ?? '';
+        
+        // Mapping status Digiflazz
+        // Success: 'Sukses' atau '00' atau '1'
+        // Failed: 'Gagal' atau 'Pending' atau 'Failed'
+        $dbStatus = 'Pending';
+        $orderStatus = 'Pending';
+        
+        if (in_array(strtolower($status), ['sukses', 'success', '00', '1'])) {
+            $dbStatus = 'Paid';
+            $orderStatus = 'Success';
+        } elseif (in_array(strtolower($status), ['gagal', 'failed', 'error'])) {
+            $dbStatus = 'Failed';
+            $orderStatus = 'Failed';
+        }
+        
+        // Cari pesanan berdasarkan ref_id atau trx_id
+        $pembelianModel = new PembelianModel();
+        
+        // Coba cari berdasarkan order_id (ref_id dari Digiflazz)
+        $order = $pembelianModel->where('order_id', $refId)->first();
+        
+        if (!$order && !empty($trxId)) {
+            // Coba cari berdasarkan trx_id jika tidak ketemu dengan ref_id
+            $order = $pembelianModel->where('trx_id', $trxId)->first();
+        }
+        
+        if (!$order) {
+            log_message('error', "Digiflazz webhook: Order not found - ref_id: $refId, trx_id: $trxId");
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Order not found'
+            ]);
+        }
+        
+        // Update status pesanan
+        $updateData = [
+            'status_pembayaran' => $dbStatus,
+            'status_pembelian' => $orderStatus,
+            'note' => 'Callback Digiflazz: ' . $message . ' (trx_id: ' . $trxId . ')'
+        ];
+        
+        try {
+            $pembelianModel->update($order['id'], $updateData);
+            
+            // Kirim notifikasi WhatsApp jika berhasil
+            if ($orderStatus === 'Success') {
+                $this->sendWhatsAppNotification($order['nomor_whatsapp'], $order['order_id'], 'success');
+            }
+            
+            log_message('info', "Digiflazz webhook: Order $refId updated to $orderStatus");
+            
+            return $this->response->setJSON([
+                'success' => true,
+                'message' => 'Status updated'
+            ]);
+        } catch (\Exception $e) {
+            log_message('error', 'Digiflazz webhook error: ' . $e->getMessage());
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+    
+    private function sendWhatsAppNotification($whatsapp, $orderId, $type)
+    {
+        // Fungsi helper untuk mengirim WhatsApp notification
+        // Implementasi sesuai kebutuhan
+    }
+        
 }

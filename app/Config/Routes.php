@@ -11,6 +11,7 @@ use CodeIgniter\Router\RouteCollection;
  });
 
 $routes->post('callback', 'Callback::callbackSakurupiah');
+$routes->post('api/webhook/digiflazz', 'Callback::webhookDigiflazz');
 
 $routes->group('', ['namespace' => 'App\Controllers\Autentikasi'], function ($routes) {
   $routes->get('masuk', 'Autentikasi::login');
