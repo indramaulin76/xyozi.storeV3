@@ -8,7 +8,7 @@
           <p class="max-w-2xl mb-6 font-light lg:mb-8 md:text-lg lg:text-xl text-gray-300">Mengalami masalah dengan transaksi anda atau yang lainnya? Silakan masukkan laporan atau permintaan anda pada form yang tersedia.</p>
       </div>
       <div class="hidden lg:mt-0 lg:col-span-5 lg:flex">
-          <img src="<?= base_url(); ?>public/img/vector/kontak.svg" alt="Xosgames.com">
+          <img src="<?= base_url(); ?>img/vector/kontak.svg" alt="Xosgames.com">
       </div>                
   </div>
 </section>

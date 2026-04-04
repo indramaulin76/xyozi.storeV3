@@ -59,7 +59,7 @@
                       <td class="px-6 py-4">
                           <?= $index + 1 ?></td>
                       <td class="px-6 py-4">
-                          <img src="<?= base_url(); ?>public/img/metode/<?= $m['gambar'] ?>" class="w-24 h-7">
+                          <img src="<?= base_url(); ?>img/metode/<?= $m['gambar'] ?>" class="w-24 h-7">
                       </td>
                       <td class="px-6 py-4">
                           <?= $m['nama'] ?>

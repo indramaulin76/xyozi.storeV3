@@ -32,7 +32,7 @@
         <div class="flex overflow-x-auto">
         <?php foreach ($games as $g) : ?>
             <div class="card relative flex-shrink-0 mr-4" data-brand="<?= $g['brand'] ?>">
-                <img class="object-cover" src="<?= base_url(); ?>public/img/games/<?= $g['gambar'] ?>" alt="<?= $g['nama'] ?>" loading="lazy">
+                <img class="object-cover" src="<?= base_url(); ?>img/games/<?= $g['gambar'] ?>" alt="<?= $g['nama'] ?>" loading="lazy">
             </div>
         <?php endforeach; ?>
         </div>

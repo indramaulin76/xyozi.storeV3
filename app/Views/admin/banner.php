@@ -53,7 +53,7 @@
                       <td class="px-6 py-4">
                           <?= $index + 1 ?></td>
                       <td class="py-4">
-                          <img src="<?= base_url(); ?>public/img/banner/<?= $b['gambar'] ?>" class="rounded-lg" style="width:150px; height:50px;">
+                          <img src="<?= base_url(); ?>img/banner/<?= $b['gambar'] ?>" class="rounded-lg" style="width:150px; height:50px;">
                       </td>
                       <td class="px-6 py-4">
                           <?= htmlspecialchars($b['tipe'], ENT_QUOTES, 'UTF-8') ?>

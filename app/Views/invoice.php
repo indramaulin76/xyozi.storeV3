@@ -32,7 +32,7 @@
                   <div class="flex items-center">
                       <?php if ($invoice['provider'] == 'RG'): ?>
                       <div class="flex-shrink-0">
-                          <img class="object-cover lazy-image w-24 h-32 rounded" data-src="<?= base_url(); ?>public/img/banner/20240322MLBB-banner.jpg" alt="MLBB" loading="lazy">
+                          <img class="object-cover lazy-image w-24 h-32 rounded" data-src="<?= base_url(); ?>img/banner/20240322MLBB-banner.jpg" alt="MLBB" loading="lazy">
                     </div>
                     <div class="flex-1 min-w-0 ms-4">
                       <p class="text-xl font-medium text-gray-900 truncate dark:text-white"><?= $invoice['games'] ?></p>
@@ -41,7 +41,7 @@
                     <table class="mt-3">
                        <?php else : ?>
                        <div class="flex-shrink-0">
-                          <img class="object-cover lazy-image w-24 h-32 rounded" data-src="<?= base_url(); ?>public/img/games/<?= $games['gambar'] ?>" alt="<?= $games['nama'] ?>" loading="lazy">
+                          <img class="object-cover lazy-image w-24 h-32 rounded" data-src="<?= base_url(); ?>img/games/<?= $games['gambar'] ?>" alt="<?= $games['nama'] ?>" loading="lazy">
                     </div>
                     <div class="flex-1 min-w-0 ms-4">
                       <p class="text-xl font-medium text-gray-900 truncate dark:text-white"><?= $invoice['games'] ?></p>

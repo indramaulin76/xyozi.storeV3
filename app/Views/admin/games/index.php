@@ -56,7 +56,7 @@
                       <td class="px-6 py-4">
                           <?= $index + 1 ?></td>
                       <td class="px-6 py-4">
-                        <img src="<?= base_url(); ?>public/img/games/<?= $g['gambar'] ?>" class="rounded" style="width:40px; height:40px; object-fit:cover;">
+                        <img src="<?= base_url(); ?>img/games/<?= $g['gambar'] ?>" class="rounded" style="width:40px; height:40px; object-fit:cover;">
                       </td>
                       <td class="px-6 py-4">
                           <?= $g['nama'] ?>

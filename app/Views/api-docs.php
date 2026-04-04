@@ -8,7 +8,7 @@
             <p class="max-w-2xl mb-6 font-light lg:mb-8 md:text-lg lg:text-xl text-gray-300">Untuk anda yang sudah mempunyai web topup game, anda dapat menghubungkan website topup game anda menggunakan Open API dari <?= $web['web_title'] ?>.</p>
         </div>
         <div class="hidden lg:mt-0 lg:col-span-5 lg:flex">
-            <img src="<?= base_url(); ?>public/img/vector/api.svg" alt="Xosgames.com">
+            <img src="<?= base_url(); ?>img/vector/api.svg" alt="Xosgames.com">
         </div>                
     </div>
 </section>

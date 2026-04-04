@@ -56,7 +56,7 @@
                       <td class="px-6 py-4">
                           <?= $index + 1 ?></td>
                       <td class="px-6 py-4">
-                        <img src="<?= base_url(); ?>public/img/games/<?= $g['gambar'] ?>" class="rounded" style="width:40px; height:40px; object-fit:cover;">
+                        <img src="<?= base_url(); ?>img/games/<?= $g['gambar'] ?>" class="rounded" style="width:40px; height:40px; object-fit:cover;">
                       </td>
                       <td class="px-6 py-4">
                           <?= $g['nama'] ?>
@@ -206,11 +206,11 @@
               <table class="table text-white text-left">
                   <tr class="border-b border-murky-600">
                     <th class="py-2">Logo</th>
-                    <td><img src="<?= base_url(); ?>public/img/games/<?= $g['gambar'] ?>" class="rounded-lg mb-2" style="width:80px; height:100px; object-fit:cover;"></td>
+                    <td><img src="<?= base_url(); ?>img/games/<?= $g['gambar'] ?>" class="rounded-lg mb-2" style="width:80px; height:100px; object-fit:cover;"></td>
                   </tr>
                   <tr class="border-b border-murky-600">
                     <th class="py-2">Banner</th>
-                    <td><img src="<?= base_url(); ?>public/img/games/<?= $g['banner'] ?>" class="rounded-lg my-2" style="width:150px; height:80px; object-fit:cover;"></td>
+                    <td><img src="<?= base_url(); ?>img/games/<?= $g['banner'] ?>" class="rounded-lg my-2" style="width:150px; height:80px; object-fit:cover;"></td>
                   </tr>
                   <tr class="border-b border-murky-600">
                     <th class="py-2">Nama Games</th>

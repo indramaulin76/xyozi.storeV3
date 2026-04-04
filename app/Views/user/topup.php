@@ -49,7 +49,7 @@
                         <?php if ($m['kategori'] == 'ewallet'): ?>
                           <div class="pb-2">
                             <button id="metodeBtn<?= $m['kode'] ?>" class="p-3 relative bg-gray-300 border-2 border-transparent gap-2 flex w-full flex-col rounded-lg">
-                              <img data-src="<?= base_url(); ?>public/img/metode/<?= $m['gambar'] ?>" alt="<?= $m['nama'] ?>" class="flex flex-col w-16 max-h-12 lazy-image" loading="lazy">
+                              <img data-src="<?= base_url(); ?>img/metode/<?= $m['gambar'] ?>" alt="<?= $m['nama'] ?>" class="flex flex-col w-16 max-h-12 lazy-image" loading="lazy">
                                <span class="topup-name"><?= nl2br($m['nama']) ?></span>
                                 <div id="selectedMetodeIndicator<?= $m['kode'] ?>" class="absolute right-0 bottom-0 px-2 x-bg-g select-check hidden">
                                     <span class="text-[9px] font-medium line-clamp-1"><i class="fa-solid fa-check text-white"></i></span>
@@ -65,7 +65,7 @@
                     <?php foreach ($metode as $m) : ?>
                         <?php if ($m['kategori'] == 'ewallet'): ?>
                         <div class="overflow-hidden overflow-x-scroll">
-                          <img data-src="<?= base_url(); ?>public/img/metode/<?= $m['gambar'] ?>" alt="<?= $m['nama'] ?>" class="flex flex-col w-10 max-h-5 lazy-image" loading="lazy">
+                          <img data-src="<?= base_url(); ?>img/metode/<?= $m['gambar'] ?>" alt="<?= $m['nama'] ?>" class="flex flex-col w-10 max-h-5 lazy-image" loading="lazy">
                         </div>
                         <?php endif; ?>
                     <?php endforeach; ?>
@@ -87,7 +87,7 @@
                         <?php if ($m['kategori'] == 'virtual-account'): ?>
                           <div class="pb-2">
                             <button id="metodeBtn<?= $m['kode'] ?>" class="p-3 relative bg-gray-300 border-2 border-transparent gap-2 flex w-full flex-col rounded-lg">
-                              <img data-src="<?= base_url(); ?>public/img/metode/<?= $m['gambar'] ?>" alt="<?= $m['nama'] ?>" class="flex flex-col w-16 max-h-12 lazy-image" loading="lazy">
+                              <img data-src="<?= base_url(); ?>img/metode/<?= $m['gambar'] ?>" alt="<?= $m['nama'] ?>" class="flex flex-col w-16 max-h-12 lazy-image" loading="lazy">
                                <span class="topup-name"><?= nl2br($m['nama']) ?></span>
                                 <div id="selectedMetodeIndicator<?= $m['kode'] ?>" class="absolute right-0 bottom-0 px-2 x-bg-g select-check hidden">
                                     <span class="text-[9px] font-medium line-clamp-1"><i class="fa-solid fa-check text-white"></i></span>
@@ -104,7 +104,7 @@
                     <?php foreach ($metode as $m) : ?>
                         <?php if ($m['kategori'] == 'virtual-account'): ?>
                         <div class="flex-shrink-0 mr-4">
-                          <img data-src="<?= base_url(); ?>public/img/metode/<?= $m['gambar'] ?>" alt="<?= $m['nama'] ?>" class="mr-2 w-10 h-4 lazy-image" loading="lazy">
+                          <img data-src="<?= base_url(); ?>img/metode/<?= $m['gambar'] ?>" alt="<?= $m['nama'] ?>" class="mr-2 w-10 h-4 lazy-image" loading="lazy">
                         </div>
                         <?php endif; ?>
                     <?php endforeach; ?>
@@ -127,7 +127,7 @@
                         <?php if ($m['kategori'] == 'retail'): ?>
                           <div class="pb-2">
                             <button id="metodeBtn<?= $m['kode'] ?>" class="p-3 relative bg-gray-300 border-2 border-transparent gap-2 flex w-full flex-col rounded-lg">
-                              <img data-src="<?= base_url(); ?>public/img/metode/<?= $m['gambar'] ?>" alt="<?= $m['nama'] ?>" class="flex flex-col w-16 max-h-12 lazy-image" loading="lazy">
+                              <img data-src="<?= base_url(); ?>img/metode/<?= $m['gambar'] ?>" alt="<?= $m['nama'] ?>" class="flex flex-col w-16 max-h-12 lazy-image" loading="lazy">
                               <span class="topup-name"><?= nl2br($m['nama']) ?></span>
                                 <div id="selectedMetodeIndicator<?= $m['kode'] ?>" class="absolute right-0 bottom-0 px-2 x-bg-g select-check hidden">
                                     <span class="text-[9px] font-medium line-clamp-1"><i class="fa-solid fa-check text-white"></i></span>
@@ -143,7 +143,7 @@
                     <?php foreach ($metode as $m) : ?>
                         <?php if ($m['kategori'] == 'retail'): ?>
                         <div class="overflow-hidden overflow-x-scroll">
-                          <img data-src="<?= base_url(); ?>public/img/metode/<?= $m['gambar'] ?>" alt="<?= $m['nama'] ?>" class="flex flex-col w-10 max-h-5 lazy-image" loading="lazy">
+                          <img data-src="<?= base_url(); ?>img/metode/<?= $m['gambar'] ?>" alt="<?= $m['nama'] ?>" class="flex flex-col w-10 max-h-5 lazy-image" loading="lazy">
                         </div>
                         <?php endif; ?>
                     <?php endforeach; ?>
@@ -165,7 +165,7 @@
                         <?php if ($m['kategori'] == 'pulsa'): ?>
                           <div class="pb-2">
                             <button id="metodeBtn<?= $m['kode'] ?>" class="p-3 relative bg-gray-300 border-2 border-transparent gap-2 flex w-full flex-col rounded-lg">
-                              <img data-src="<?= base_url(); ?>public/img/metode/<?= $m['gambar'] ?>" alt="<?= $m['nama'] ?>" class="flex flex-col w-16 max-h-12 lazy-image" loading="lazy">
+                              <img data-src="<?= base_url(); ?>img/metode/<?= $m['gambar'] ?>" alt="<?= $m['nama'] ?>" class="flex flex-col w-16 max-h-12 lazy-image" loading="lazy">
                               <span class="topup-name"><?= nl2br($m['nama']) ?></span>
                                 <div id="selectedMetodeIndicator<?= $m['kode'] ?>" class="absolute right-0 bottom-0 px-2 x-bg-g select-check hidden">
                                     <span class="text-[9px] font-medium line-clamp-1"><i class="fa-solid fa-check text-white"></i></span>
@@ -181,7 +181,7 @@
                     <?php foreach ($metode as $m) : ?>
                         <?php if ($m['kategori'] == 'pulsa'): ?>
                         <div class="overflow-hidden overflow-x-scroll">
-                          <img data-src="<?= base_url(); ?>public/img/metode/<?= $m['gambar'] ?>" alt="<?= $m['nama'] ?>" class="flex flex-col w-10 max-h-5 lazy-image" loading="lazy">
+                          <img data-src="<?= base_url(); ?>img/metode/<?= $m['gambar'] ?>" alt="<?= $m['nama'] ?>" class="flex flex-col w-10 max-h-5 lazy-image" loading="lazy">
                         </div>
                         <?php endif; ?>
                     <?php endforeach; ?>

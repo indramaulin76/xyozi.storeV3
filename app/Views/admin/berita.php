@@ -53,7 +53,7 @@
                       <td class="px-6 py-4">
                           <?= $index + 1 ?></td>
                       <td class="px-6 py-4">
-                          <img src="<?= base_url(); ?>public/img/berita/<?= $b['gambar'] ?>" style="max-width: 100px; height: 60px;">
+                          <img src="<?= base_url(); ?>img/berita/<?= $b['gambar'] ?>" style="max-width: 100px; height: 60px;">
                       </td>
                       <td class="px-6 py-4">
                           <?= $b['judul'] ?>
@@ -146,7 +146,7 @@
             <div class="p-4 md:p-5 space-y-4">
               <table class="table text-white text-left">
                   <tr class="border-b border-murky-600">
-                    <td><img src="<?= base_url(); ?>public/img/berita/<?= $b['gambar'] ?>" class="rounded-lg my-2" style="width:150px; height:80px; object-fit:cover;"></td>
+                    <td><img src="<?= base_url(); ?>img/berita/<?= $b['gambar'] ?>" class="rounded-lg my-2" style="width:150px; height:80px; object-fit:cover;"></td>
                   </tr>
                   <tr class="border-b border-murky-600">
                     <td class="py-2"><?= $b['judul'] ?></td>
