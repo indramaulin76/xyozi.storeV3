@@ -779,10 +779,7 @@ class Order extends BaseController
                     'message'=>$responseData['message'] ?? 'Tidak ada data pembayaran yang valid!'
                 ]);
           }
-        
         }
-    }
-        
     }
     
     private function sendUserWhatsappMessage($whatsapp, $whatsappMessage)
