@@ -362,10 +362,19 @@ public function callbackSakurupiah()
     // ============================================
     public function webhookDigiflazz()
     {
+        log_message('info', 'Digiflazz webhook received: ' . json_encode($_POST));
+        
         $request = service('request');
         $json = $request->getJSON(true);
         
         if (empty($json)) {
+            // Coba get dari raw POST
+            $json = $_POST;
+            log_message('info', 'Digiflazz webhook (POST): ' . json_encode($json));
+        }
+        
+        if (empty($json)) {
+            log_message('error', 'Digiflazz webhook: No data received');
             return $this->response->setJSON([
                 'success' => false,
                 'message' => 'No data received'
@@ -378,7 +387,7 @@ public function callbackSakurupiah()
         $receivedSignature = $_SERVER['HTTP_X_SIGNATURE'] ?? '';
         
         // Jika ada signature, validasi (opsional tergantung Digiflazz)
-        if (!empty($receivedSignature) && $receivedSecret !== $expectedSecret) {
+        if (!empty($receivedSignature) && $receivedSignature !== $expectedSecret) {
             log_message('error', 'Digiflazz webhook: Invalid signature');
             return $this->response->setStatusCode(403)->setJSON([
                 'success' => false,
@@ -392,19 +401,29 @@ public function callbackSakurupiah()
         $status = $json['status'] ?? '';
         $message = $json['message'] ?? '';
         
-        // Mapping status Digiflazz
-        // Success: 'Sukses' atau '00' atau '1'
-        // Failed: 'Gagal' atau 'Pending' atau 'Failed'
-        $dbStatus = 'Pending';
+        log_message('info', "Digiflazz webhook data: trx_id=$trxId, ref_id=$refId, status=$status, message=$message");
+        
+        // Mapping status Digiflazz ke status database
+        // Success: 'Sukses', '00', '1', 'Success'
+        // Failed: 'Gagal', 'Failed', 'Error'
+        // Pending: 'Pending', 'processing'
+        $dbStatus = 'Unpaid';
         $orderStatus = 'Pending';
         
-        if (in_array(strtolower($status), ['sukses', 'success', '00', '1'])) {
+        $statusLower = strtolower($status);
+        
+        if (in_array($statusLower, ['sukses', 'success', '00', '1'])) {
             $dbStatus = 'Paid';
-            $orderStatus = 'Success';
-        } elseif (in_array(strtolower($status), ['gagal', 'failed', 'error'])) {
+            $orderStatus = 'Sukses'; // Gunakan 'Sukses' sesuai database
+        } elseif (in_array($statusLower, ['gagal', 'failed', 'error'])) {
             $dbStatus = 'Failed';
-            $orderStatus = 'Failed';
+            $orderStatus = 'Gagal';
+        } elseif ($statusLower === 'pending' || $statusLower === 'processing') {
+            $dbStatus = 'Unpaid';
+            $orderStatus = 'Pending';
         }
+        
+        log_message('info', "Digiflazz mapping: dbStatus=$dbStatus, orderStatus=$orderStatus");
         
         // Cari pesanan berdasarkan ref_id atau trx_id
         $pembelianModel = new PembelianModel();
@@ -425,6 +444,8 @@ public function callbackSakurupiah()
             ]);
         }
         
+        log_message('info', "Digiflazz webhook: Found order ID: " . $order['id'] . ", current status: " . $order['status_pembelian']);
+        
         // Update status pesanan
         $updateData = [
             'status_pembayaran' => $dbStatus,
@@ -435,16 +456,16 @@ public function callbackSakurupiah()
         try {
             $pembelianModel->update($order['id'], $updateData);
             
-            // Kirim notifikasi WhatsApp jika berhasil
-            if ($orderStatus === 'Success') {
-                $this->sendWhatsAppNotification($order['nomor_whatsapp'], $order['order_id'], 'success');
-            }
-            
-            log_message('info', "Digiflazz webhook: Order $refId updated to $orderStatus");
+            log_message('info', "Digiflazz webhook: Order $refId updated to status_pembelian=$orderStatus, status_pembayaran=$dbStatus");
             
             return $this->response->setJSON([
                 'success' => true,
-                'message' => 'Status updated'
+                'message' => 'Status updated',
+                'data' => [
+                    'order_id' => $refId,
+                    'trx_id' => $trxId,
+                    'status' => $orderStatus
+                ]
             ]);
         } catch (\Exception $e) {
             log_message('error', 'Digiflazz webhook error: ' . $e->getMessage());
