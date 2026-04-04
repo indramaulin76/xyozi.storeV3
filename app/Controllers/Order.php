@@ -747,7 +747,7 @@ class Order extends BaseController
               $whatsappMessage .= "---------------------------\n";
               $whatsappMessage .= "*Invoice*: {$merchant_ref}\n";
               $whatsappMessage .= "*Produk*: {$produk['nama']}\n";
-              $hargaProduk = number_format($nominal, 0, ',', '.');
+              $hargaProduk = number_format($hargaJual, 0, ',', '.');
               $whatsappMessage .= "*Harga*: Rp {$hargaProduk}\n";
               $whatsappMessage .= "*Status*: Menunggu Pembayaran\n";
               $whatsappMessage .= "---------------------------\n\n";
