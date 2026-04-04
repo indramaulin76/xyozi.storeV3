@@ -396,11 +396,13 @@ public function callbackSakurupiah()
         }
         
         // Ambil data dari Digiflazz
-        $trxId = $json['trx_id'] ?? '';
-        $refId = $json['ref_id'] ?? '';
+        // Digiflazz biasanya mengirim: ref_id, trx_id, status
+        $trxId = $json['trx_id'] ?? $json['transaction_id'] ?? '';
+        $refId = $json['ref_id'] ?? $json['merchant_ref'] ?? $json['reference'] ?? '';
         $status = $json['status'] ?? '';
-        $message = $json['message'] ?? '';
+        $message = $json['message'] ?? $json['rc'] ?? '';
         
+        log_message('info', "Digiflazz webhook RAW JSON: " . json_encode($json));
         log_message('info', "Digiflazz webhook data: trx_id=$trxId, ref_id=$refId, status=$status, message=$message");
         
         // Mapping status Digiflazz ke status database
@@ -425,22 +427,40 @@ public function callbackSakurupiah()
         
         log_message('info', "Digiflazz mapping: dbStatus=$dbStatus, orderStatus=$orderStatus");
         
-        // Cari pesanan berdasarkan ref_id atau trx_id
+        // Cari pesanan - coba berbagai kolom
         $pembelianModel = new PembelianModel();
+        $order = null;
         
         // Coba cari berdasarkan order_id (ref_id dari Digiflazz)
-        $order = $pembelianModel->where('order_id', $refId)->first();
+        if (!empty($refId)) {
+            $order = $pembelianModel->where('order_id', $refId)->first();
+            log_message('info', "Digiflazz: Search by order_id=$refId result: " . ($order ? "FOUND id=".$order['id'] : "NOT FOUND"));
+        }
         
+        // Coba cari berdasarkan trx_id
         if (!$order && !empty($trxId)) {
-            // Coba cari berdasarkan trx_id jika tidak ketemu dengan ref_id
             $order = $pembelianModel->where('trx_id', $trxId)->first();
+            log_message('info', "Digiflazz: Search by trx_id=$trxId result: " . ($order ? "FOUND id=".$order['id'] : "NOT FOUND"));
+        }
+        
+        // Coba cari berdasarkan invoice (jika refId adalah invoice)
+        if (!$order && !empty($refId)) {
+            $order = $pembelianModel->where('invoice', $refId)->first();
+            log_message('info', "Digiflazz: Search by invoice=$refId result: " . ($order ? "FOUND id=".$order['id'] : "NOT FOUND"));
+        }
+        
+        // Coba cari tanpa batasan status - ambil yang terbaru
+        if (!$order && !empty($refId)) {
+            $order = $pembelianModel->orderBy('id', 'DESC')->where('order_id', $refId)->first();
+            log_message('info', "Digiflazz: Search without status filter result: " . ($order ? "FOUND id=".$order['id'] : "NOT FOUND"));
         }
         
         if (!$order) {
-            log_message('error', "Digiflazz webhook: Order not found - ref_id: $refId, trx_id: $trxId");
+            log_message('error', "Digiflazz webhook: Order not found - ref_id: $refId, trx_id: $trxId - Tried all columns");
             return $this->response->setJSON([
                 'success' => false,
-                'message' => 'Order not found'
+                'message' => 'Order not found',
+                'debug' => ['ref_id' => $refId, 'trx_id' => $trxId]
             ]);
         }
         
