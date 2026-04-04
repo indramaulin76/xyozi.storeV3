@@ -110,7 +110,7 @@
               <span class="text-sm font-normal text-gray-900 dark:text-white">MLBB Mobile Legends</h5>
               </div>
               <div class="col px-3 mb-4" style="display: flex; align-items: center;">
-                         <img src="public/img/img2/tes.gif" class="gradient-corona-img img-x" alt="" width="50">
+                         <img src="img/img2/tes.gif" class="gradient-corona-img img-x" alt="" width="50">
                                 <marquee width="100%" direction="left" style="flex-grow: 1;">
                                     <span class="mb-0 font-weight-normal"><strong>Proses Otomatis</strong> |</span>
                                 <span class="font-weight-normal">Open 24 Jam Nonstop |</span>&nbsp;
