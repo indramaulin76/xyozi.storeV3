@@ -538,6 +538,7 @@
         var selectedProductName = document.getElementById('selectedProductNama').innerText;
         var whatsappElement = document.getElementById("whatsapp");
         var whatsappNumber = whatsappElement ? whatsappElement.value : '';
+        var usernameFromCek = ''; // Store username from cekID response
         
         // Joki
         const formJoki = "<?php echo $games['tipe_target']; ?>";
@@ -663,6 +664,9 @@
       })
       .then(data => {
         Swal.close();
+        // Store username from cekID response
+        usernameFromCek = data.responseData || '';
+        
         if (data.error) {
           Swal.fire({
             title: "Kesalahan",
@@ -853,7 +857,7 @@
         body: JSON.stringify({
           uid: uid || '',
           server: server || '',
-          username: responseData || '',
+          username: usernameFromCek || uid || '',
           productCode: selectedProductCode || '',
           productPrice: selectedProductPrice || '',
           productName: selectedProductName || '',
