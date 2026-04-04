@@ -471,7 +471,7 @@ public function callbackSakurupiah()
         $updateData = [
             'status_pembayaran' => $dbStatus,
             'status_pembelian' => $orderStatus,
-            'note' => 'Callback Digiflazz: ' . $message . ' (trx_id: ' . $trxId . ')'
+            'note' => 'Pesanan Sukses'
         ];
         
         try {
