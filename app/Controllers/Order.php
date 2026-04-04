@@ -619,7 +619,7 @@ class Order extends BaseController
             'size' => array('Uid:'.$namanya.' | Server '.$server.' '),
             'note' => array('Username : '.empty($user['username']) ? "Tidak Login" : $user['username'].''),
             'callback_url' => ''.$URL_config.'/callback',                      
-            'return_url' => ''.$URL_config.'/invoice/'.$ref_id.'',
+            'return_url' => ''.$URL_config.'/invoice/'.$merchant_ref.'',
             'signature' => $signature
         );
         
